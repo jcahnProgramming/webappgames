@@ -1,30 +1,46 @@
 import React, { useState } from "react";
 
-type WordleStatus = "playing" | "won" | "lost";
+// Import word lists as raw text (Vite feature)
+import answersRaw from "../data/wordle-answers.txt?raw";
+import guessesRaw from "../data/wordle-guesses.txt?raw";
 
+type WordleStatus = "playing" | "won" | "lost";
 type LetterStatus = "correct" | "present" | "absent" | "empty";
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
 
-// Simple built-in word list – replace/expand as you like
-const WORDS = ["APPLE", "REACT", "GAMES", "STACK", "CRANE", "WORLD", "TYPES"];
+// Parse text files into arrays of uppercase words
+const ANSWERS: string[] = answersRaw
+  .split("\n")
+  .map((w) => w.trim())
+  .filter(Boolean)
+  .map((w) => w.toUpperCase());
+
+const VALID_GUESSES: string[] = guessesRaw
+  .split("\n")
+  .map((w) => w.trim())
+  .filter(Boolean)
+  .map((w) => w.toUpperCase());
+
+// Full dictionary = answers + allowed guesses
+const VALID_DICTIONARY = new Set<string>([...ANSWERS, ...VALID_GUESSES]);
 
 function pickRandomWord(): string {
-  const idx = Math.floor(Math.random() * WORDS.length);
-  return WORDS[idx];
+  const idx = Math.floor(Math.random() * ANSWERS.length);
+  return ANSWERS[idx];
 }
 
 function evaluateGuess(guess: string, target: string): LetterStatus[] {
   const result: LetterStatus[] = Array(WORD_LENGTH).fill("absent");
   const targetChars = target.split("");
-
-  // First pass – correct positions
   const usedTarget = targetChars.map((ch) => ch);
+
+  // First pass – exact matches
   for (let i = 0; i < WORD_LENGTH; i++) {
     if (guess[i] === target[i]) {
       result[i] = "correct";
-      usedTarget[i] = "*"; // mark as used
+      usedTarget[i] = "*";
     }
   }
 
@@ -51,7 +67,10 @@ export const WordleGame: React.FC = () => {
   const [status, setStatus] = useState<WordleStatus>("playing");
   const [message, setMessage] = useState<string | null>(null);
 
-  const rows = Array.from({ length: MAX_GUESSES }).map((_, i) => guesses[i] ?? "");
+  // Always render MAX_GUESSES rows
+  const rows = Array.from({ length: MAX_GUESSES }).map(
+    (_, i) => guesses[i] ?? ""
+  );
 
   const handleLetter = (letter: string) => {
     if (status !== "playing") return;
@@ -81,6 +100,12 @@ export const WordleGame: React.FC = () => {
     }
 
     const guess = currentGuess.toUpperCase();
+
+    if (!VALID_DICTIONARY.has(guess)) {
+      setMessage("Not a valid word.");
+      return;
+    }
+
     const nextGuesses = [...guesses, guess];
     setGuesses(nextGuesses);
     setCurrentGuess("");
@@ -142,11 +167,7 @@ export const WordleGame: React.FC = () => {
   };
 
   return (
-    <div
-      className="wordle"
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-    >
+    <div className="wordle" tabIndex={0} onKeyDown={handleKeyDown}>
       <h2>Wordle Clone</h2>
       <p className="wordle-subtitle">
         Type letters and press Enter to submit. Backspace deletes.

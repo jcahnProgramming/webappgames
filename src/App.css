@@ -1307,3 +1307,77 @@ body {
   border-color: #16a34a;
   color: #020617;
 }
+
+/* Wordle Clone */
+
+.wordle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+}
+
+.wordle-subtitle {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.wordle-grid {
+  margin-top: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.wordle-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.25rem;
+}
+
+.wordle-cell {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 0.4rem;
+  border: 2px solid #1f2937;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #020617;
+  color: #e5e7eb;
+}
+
+/* Evaluation colors */
+.wordle-cell-correct {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #020617;
+}
+
+.wordle-cell-present {
+  background: #eab308;
+  border-color: #eab308;
+  color: #020617;
+}
+
+.wordle-cell-absent {
+  background: #111827;
+  border-color: #111827;
+}
+
+.wordle-message {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+}
+
+.wordle-actions {
+  margin-top: 0.6rem;
+  display: flex;
+  gap: 0.5rem;
+}
