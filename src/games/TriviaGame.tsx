@@ -65,12 +65,7 @@ const QUESTIONS: Question[] = [
   {
     id: 8,
     question: "In Git, which command creates a new branch?",
-    options: [
-      "git commit",
-      "git checkout -b",
-      "git merge",
-      "git status",
-    ],
+    options: ["git commit", "git checkout -b", "git merge", "git status"],
     correctIndex: 1,
   },
   {
@@ -99,7 +94,6 @@ export const TriviaGame: React.FC = () => {
   const [score, setScore] = useState(0);
 
   const currentQuestion = QUESTIONS[currentIndex];
-
   const hasNext = currentIndex < QUESTIONS.length - 1;
 
   const handleOptionClick = (index: number) => {
@@ -129,6 +123,19 @@ export const TriviaGame: React.FC = () => {
     setStatus("playing");
   };
 
+  const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (status !== "playing") return;
+    if (selectedIndex !== null) return;
+
+    const maxOption = currentQuestion.options.length;
+
+    if (e.key >= "1" && e.key <= String(maxOption)) {
+      e.preventDefault();
+      const idx = Number(e.key) - 1;
+      handleOptionClick(idx);
+    }
+  };
+
   const progressText = `Question ${currentIndex + 1} of ${QUESTIONS.length}`;
 
   const resultMessage = (() => {
@@ -140,7 +147,11 @@ export const TriviaGame: React.FC = () => {
   })();
 
   return (
-    <div className="trivia">
+    <div
+      className="trivia"
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+    >
       <h2>Trivia Quiz</h2>
 
       {status === "playing" ? (
@@ -150,9 +161,7 @@ export const TriviaGame: React.FC = () => {
             <span>Score: {score}</span>
           </div>
 
-          <div className="trivia-question">
-            {currentQuestion.question}
-          </div>
+          <div className="trivia-question">{currentQuestion.question}</div>
 
           <div className="trivia-options">
             {currentQuestion.options.map((opt, idx) => {

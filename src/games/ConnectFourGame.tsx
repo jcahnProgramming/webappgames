@@ -17,10 +17,8 @@ function createEmptyBoard(): Board {
 }
 
 function dropDisc(board: Board, col: number, player: Player): Board | null {
-  // can't drop outside board
   if (col < 0 || col >= COLS) return null;
 
-  // find lowest empty row
   for (let row = ROWS - 1; row >= 0; row--) {
     if (!board[row][col]) {
       const newBoard = board.map((r) => [...r]);
@@ -28,16 +26,14 @@ function dropDisc(board: Board, col: number, player: Player): Board | null {
       return newBoard;
     }
   }
-  // column full
   return null;
 }
 
 function checkWinner(board: Board): Player | null {
-  // Check all directions for 4 in a row
   const directions = [
-    { dr: 0, dc: 1 },  // horizontal
-    { dr: 1, dc: 0 },  // vertical
-    { dr: 1, dc: 1 },  // diag down-right
+    { dr: 0, dc: 1 }, // horizontal
+    { dr: 1, dc: 0 }, // vertical
+    { dr: 1, dc: 1 }, // diag down-right
     { dr: -1, dc: 1 }, // diag up-right
   ];
 
@@ -84,7 +80,7 @@ export const ConnectFourGame: React.FC = () => {
     if (status !== "playing") return;
 
     const newBoard = dropDisc(board, col, currentPlayer);
-    if (!newBoard) return; // column full, ignore
+    if (!newBoard) return;
 
     const maybeWinner = checkWinner(newBoard);
 
@@ -106,6 +102,16 @@ export const ConnectFourGame: React.FC = () => {
     setCurrentPlayer((p) => (p === "R" ? "Y" : "R"));
   };
 
+  const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (status !== "playing") return;
+
+    if (e.key >= "1" && e.key <= "7") {
+      e.preventDefault();
+      const col = Number(e.key) - 1;
+      handleColumnClick(col);
+    }
+  };
+
   const resetGame = () => {
     setBoard(createEmptyBoard());
     setCurrentPlayer("R");
@@ -121,12 +127,15 @@ export const ConnectFourGame: React.FC = () => {
   })();
 
   return (
-    <div className="c4">
+    <div
+      className="c4"
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+    >
       <h2>Connect Four</h2>
       <p className="c4-subtitle">{statusText}</p>
 
       <div className="c4-board">
-        {/* Column click targets */}
         <div className="c4-columns">
           {Array.from({ length: COLS }).map((_, col) => (
             <button
@@ -139,7 +148,6 @@ export const ConnectFourGame: React.FC = () => {
           ))}
         </div>
 
-        {/* Grid */}
         <div className="c4-grid">
           {board.map((row, r) =>
             row.map((cell, c) => {

@@ -1381,3 +1381,443 @@ body {
   display: flex;
   gap: 0.5rem;
 }
+
+.game-shell {
+  margin-top: 0.5rem;
+  border-radius: 1rem;
+  background: #020617;
+  border: 1px solid #1f2937;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 1rem;
+}
+
+.game-shell-main {
+  min-width: 0;
+}
+
+.game-shell-controls {
+  align-self: flex-start;
+  background: #020617;
+  border-radius: 0.75rem;
+  border: 1px solid #1f2937;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.8rem;
+  color: #e5e7eb;
+}
+
+.game-shell-controls h3 {
+  margin: 0 0 0.3rem;
+  font-size: 0.85rem;
+}
+
+.game-shell-controls ul {
+  margin: 0;
+  padding-left: 1.05rem;
+}
+
+.game-shell-controls li + li {
+  margin-top: 0.15rem;
+}
+
+@media (max-width: 768px) {
+  .game-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Layout shell and site chrome */
+
+.site-container {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #0f172a 0, #020617 55%);
+  color: #e5e7eb;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    sans-serif;
+}
+
+.site-header {
+  padding: 1rem 1.5rem 0.5rem;
+}
+
+.site-main {
+  padding: 0 1.5rem 2rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.site-footer {
+  padding: 0.75rem 1.5rem 1.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* Brand */
+
+.site-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.site-logo {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111827;
+  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.3);
+}
+
+.site-title {
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.site-tagline {
+  font-size: 0.8rem;
+  margin: 0.15rem 0 0;
+  color: #9ca3af;
+}
+
+/* Hero */
+
+.site-hero {
+  margin-top: 1.25rem;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.site-hero-text h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.3rem;
+}
+
+.site-hero-text p {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: #e5e7eb;
+}
+
+.site-hero-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.site-hero-list li + li {
+  margin-top: 0.15rem;
+}
+
+.site-hero-highlight {
+  border-radius: 1rem;
+  padding: 0.9rem 1rem;
+  background: linear-gradient(135deg, #111827, #020617);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.site-hero-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+}
+
+.site-hero-game-name {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.site-hero-game-tagline {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #d1d5db;
+}
+
+.site-hero-play {
+  margin-top: 0.5rem;
+  align-self: flex-start;
+}
+
+/* Game picker */
+
+.game-picker {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.game-picker-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.game-picker-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.game-picker-subtitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.game-picker-count {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+}
+
+/* Game chips */
+
+.game-chip-row {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.15rem;
+}
+
+.game-chip-row::-webkit-scrollbar {
+  height: 4px;
+}
+
+.game-chip-row::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 999px;
+}
+
+.game-chip {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  padding: 0.35rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: #e5e7eb;
+  transition: background 0.15s ease, border 0.15s ease, transform 0.1s ease;
+}
+
+.game-chip:hover {
+  background: #0b1120;
+  transform: translateY(-1px);
+}
+
+.game-chip--active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #f9fafb;
+}
+
+.game-chip-name {
+  white-space: nowrap;
+}
+
+.game-chip-badge {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+}
+
+/* Game detail */
+
+.game-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: 0.9rem;
+  border: 1px solid #1f2937;
+  background: #020617;
+}
+
+.game-detail-text h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.game-detail-text p {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.secondary-button.game-detail-play {
+  font-size: 0.8rem;
+  padding: 0.4rem 0.8rem;
+}
+
+/* Game shell */
+
+.game-shell-section {
+  margin-top: 1.5rem;
+}
+
+.game-shell {
+  margin-top: 0.5rem;
+  border-radius: 1rem;
+  background: #020617;
+  border: 1px solid #1f2937;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 1rem;
+}
+
+.game-shell-main {
+  min-width: 0;
+}
+
+.game-shell-controls {
+  align-self: flex-start;
+  background: #020617;
+  border-radius: 0.75rem;
+  border: 1px solid #1f2937;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.8rem;
+  color: #e5e7eb;
+}
+
+.game-shell-controls h3 {
+  margin: 0 0 0.3rem;
+  font-size: 0.85rem;
+}
+
+.game-shell-controls ul {
+  margin: 0;
+  padding-left: 1.05rem;
+}
+
+.game-shell-controls li + li {
+  margin-top: 0.15rem;
+}
+
+/* Wordle grid (if not already added) */
+
+.wordle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+}
+
+.wordle-subtitle {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.wordle-grid {
+  margin-top: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.wordle-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.25rem;
+}
+
+.wordle-cell {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 0.4rem;
+  border: 2px solid #1f2937;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #020617;
+  color: #e5e7eb;
+}
+
+.wordle-cell-correct {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #020617;
+}
+
+.wordle-cell-present {
+  background: #eab308;
+  border-color: #eab308;
+  color: #020617;
+}
+
+.wordle-cell-absent {
+  background: #111827;
+  border-color: #111827;
+}
+
+.wordle-message {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+}
+
+.wordle-actions {
+  margin-top: 0.6rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Sliding puzzle correct tile (if not already added) */
+
+.slide-tile-correct {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #020617;
+}
+
+/* Responsive tweaks */
+
+@media (max-width: 768px) {
+  .site-main {
+    padding: 0 1rem 2rem;
+  }
+
+  .site-hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .game-detail {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .secondary-button.game-detail-play {
+    align-self: stretch;
+    text-align: center;
+  }
+
+  .game-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

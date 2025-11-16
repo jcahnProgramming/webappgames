@@ -48,13 +48,13 @@ const GAME_LIST: GameMeta[] = [
     id: "wordsearch",
     shortName: "Word Search",
     name: "Word Search",
-    tagline: "Drag to highlight hidden words in a letter grid.",
+    tagline: "Find hidden words in the letter grid.",
   },
   {
     id: "sudoku",
     shortName: "Sudoku",
     name: "Sudoku",
-    tagline: "Fill the 9×9 board so each row, column and box has 1–9.",
+    tagline: "Fill the 9×9 grid so each row, column and box has 1–9.",
   },
   {
     id: "tictactoe",
@@ -106,10 +106,63 @@ const GAME_LIST: GameMeta[] = [
   },
 ];
 
+const GAME_CONTROLS: Record<GameId, string[]> = {
+  wordle: [
+    "Type letters A–Z to fill the row.",
+    "Enter to submit your guess.",
+    "Backspace deletes the last letter.",
+  ],
+  wordsearch: [
+    "Click and drag to select letter paths.",
+    "On mobile, use touch and drag to highlight words.",
+  ],
+  sudoku: [
+    "Tap/click a cell, then choose a number.",
+    "Each row, column and 3×3 box must contain 1–9.",
+  ],
+  tictactoe: [
+    "Tap a square to place your mark.",
+    "Play against the built-in AI.",
+  ],
+  game2048: [
+    "Click/tap into the board, then use arrow keys to slide tiles.",
+    "Try to reach the 2048 tile.",
+  ],
+  memory: [
+    "Tap cards to flip them.",
+    "Flip two matching cards to clear a pair.",
+  ],
+  sliding: [
+    "Click a tile adjacent to the empty space to slide it.",
+    "Or focus the puzzle and use arrow keys to move tiles.",
+    "Tiles turn green when they’re in the correct position.",
+  ],
+  trivia: [
+    "Click an answer option to select it.",
+    "Or press keys 1–4 to choose an option.",
+    "Then click 'Next Question' / 'Finish Quiz' to continue.",
+  ],
+  connect4: [
+    "Click a column arrow to drop your disc.",
+    "Or press keys 1–7 to drop in that column.",
+    "First player to connect four in a row wins.",
+  ],
+  rpsls: [
+    "Click any move button to play a round.",
+    "Track wins, losses, and draws in the stats.",
+  ],
+  minesweeper: [
+    "Tap cells to reveal them.",
+    "Toggle 'Flag Mode' to mark suspected mines.",
+    "Clear all safe cells without hitting a mine.",
+  ],
+};
+
 const App: React.FC = () => {
   const [activeGame, setActiveGame] = useState<GameId>("wordle");
 
-  const currentMeta = GAME_LIST.find((g) => g.id === activeGame) ?? GAME_LIST[0];
+  const currentMeta =
+    GAME_LIST.find((g) => g.id === activeGame) ?? GAME_LIST[0];
 
   const renderGame = () => {
     switch (activeGame) {
@@ -140,9 +193,15 @@ const App: React.FC = () => {
     }
   };
 
+  const scrollToGame = () => {
+    const el = document.querySelector(".game-shell-section");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <div className="site-container">
-      {/* Header / brand */}
       <header className="site-header">
         <div className="site-brand">
           <div className="site-logo">🎮</div>
@@ -156,7 +215,7 @@ const App: React.FC = () => {
       </header>
 
       <main className="site-main">
-        {/* Landing hero */}
+        {/* Hero section */}
         <section className="site-hero">
           <div className="site-hero-text">
             <h2>Playful, responsive, and built for the browser.</h2>
@@ -166,8 +225,8 @@ const App: React.FC = () => {
             </p>
             <ul className="site-hero-list">
               <li>⚡ React + TypeScript SPA</li>
-              <li>📱 Optimized for mobile & desktop</li>
-              <li>🎯 Multiple genres: puzzle, logic, trivia & more</li>
+              <li>📱 Optimized for mobile &amp; desktop</li>
+              <li>🎯 Multiple genres: puzzle, logic, trivia &amp; more</li>
             </ul>
           </div>
           <div className="site-hero-highlight">
@@ -176,19 +235,14 @@ const App: React.FC = () => {
             <p className="site-hero-game-tagline">{currentMeta.tagline}</p>
             <button
               className="primary-button site-hero-play"
-              onClick={() => {
-                const el = document.querySelector(".game-shell-section");
-                if (el) {
-                  el.scrollIntoView({ behavior: "smooth", block: "start" });
-                }
-              }}
+              onClick={scrollToGame}
             >
               Jump into game
             </button>
           </div>
         </section>
 
-        {/* Game selection section */}
+        {/* Game picker */}
         <section className="game-picker">
           <div className="game-picker-header">
             <div>
@@ -203,7 +257,6 @@ const App: React.FC = () => {
             </span>
           </div>
 
-          {/* Upgraded selection bar */}
           <div className="game-chip-row">
             {GAME_LIST.map((game) => (
               <button
@@ -224,7 +277,6 @@ const App: React.FC = () => {
             ))}
           </div>
 
-          {/* Current game summary */}
           <div className="game-detail">
             <div className="game-detail-text">
               <h3>{currentMeta.name}</h3>
@@ -232,21 +284,18 @@ const App: React.FC = () => {
             </div>
             <button
               className="secondary-button game-detail-play"
-              onClick={() => {
-                const el = document.querySelector(".game-shell-section");
-                if (el) {
-                  el.scrollIntoView({ behavior: "smooth", block: "start" });
-                }
-              }}
+              onClick={scrollToGame}
             >
               Scroll to game
             </button>
           </div>
         </section>
 
-        {/* Actual game area */}
+        {/* Game shell */}
         <section className="game-shell-section">
-          <GameShell>{renderGame()}</GameShell>
+          <GameShell controls={GAME_CONTROLS[activeGame]}>
+            {renderGame()}
+          </GameShell>
         </section>
       </main>
 

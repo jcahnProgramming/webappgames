@@ -1,9 +1,25 @@
 import React from "react";
 
-export const GameShell = ({ children }: React.PropsWithChildren) => {
+type GameShellProps = {
+  children: React.ReactNode;
+  controls?: string[];
+};
+
+export const GameShell: React.FC<GameShellProps> = ({ children, controls }) => {
   return (
-    <section className="game-shell">
-      {children}
-    </section>
+    <div className="game-shell">
+      <div className="game-shell-main">{children}</div>
+
+      {controls && controls.length > 0 && (
+        <aside className="game-shell-controls">
+          <h3>Controls</h3>
+          <ul>
+            {controls.map((line, idx) => (
+              <li key={idx}>{line}</li>
+            ))}
+          </ul>
+        </aside>
+      )}
+    </div>
   );
 };
