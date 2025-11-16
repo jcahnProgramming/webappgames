@@ -124,12 +124,15 @@ export const SKINS: Skin[] = [
   },
 ];
 
+type EquippedSkins = Record<GameId | "global", string | null>;
+
 type ArcadeState = {
   globalStats: GlobalStats;
   perGameStats: Record<GameId, PerGameStats>;
   currency: number;
   achievements: string[]; // ids
   skinsUnlocked: string[]; // skin ids
+  equippedSkins: EquippedSkins;
 };
 
 type AchievementToast = {
@@ -146,10 +149,11 @@ export type ArcadeContextValue = ArcadeState & {
   recordGamePlayed: (gameId: GameId) => void;
   recordWin: (gameId: GameId, options?: RecordGameWinOptions) => void;
   unlockAchievement: (achievementId: string) => void;
+  setEquippedSkin: (target: GameId | "global", skinId: string | null) => void;
   achievementToasts: AchievementToast[];
 };
 
-const STORAGE_KEY = "webarcade-arcade-state-v1";
+const STORAGE_KEY = "webarcade-arcade-state-v2";
 
 const defaultPerGameStats: PerGameStats = {
   plays: 0,
@@ -178,6 +182,21 @@ function createInitialPerGameStats(): Record<GameId, PerGameStats> {
   return result as Record<GameId, PerGameStats>;
 }
 
+const defaultEquippedSkins: EquippedSkins = {
+  wordle: "wordle_classic",
+  wordsearch: null,
+  sudoku: null,
+  tictactoe: null,
+  game2048: "game2048_classic",
+  memory: null,
+  sliding: null,
+  trivia: null,
+  connect4: null,
+  rpsls: null,
+  minesweeper: null,
+  global: null,
+};
+
 const initialState: ArcadeState = {
   globalStats: {
     totalGamesPlayed: 0,
@@ -188,6 +207,7 @@ const initialState: ArcadeState = {
   currency: 0,
   achievements: [],
   skinsUnlocked: ["wordle_classic", "game2048_classic"],
+  equippedSkins: defaultEquippedSkins,
 };
 
 const ArcadeContext = createContext<ArcadeContextValue | undefined>(undefined);
@@ -250,14 +270,20 @@ export const ArcadeProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (!raw) return initialState;
-      const parsed = JSON.parse(raw) as ArcadeState;
+      const parsed = JSON.parse(raw) as Partial<ArcadeState>;
+
+      const parsedEquipped: EquippedSkins | undefined = parsed.equippedSkins;
 
       return {
         ...initialState,
         ...parsed,
         perGameStats: {
           ...createInitialPerGameStats(),
-          ...parsed.perGameStats,
+          ...(parsed.perGameStats ?? {}),
+        },
+        equippedSkins: {
+          ...defaultEquippedSkins,
+          ...(parsedEquipped ?? {}),
         },
       };
     } catch {
@@ -428,11 +454,22 @@ export const ArcadeProvider: React.FC<{ children: ReactNode }> = ({
     });
   };
 
+  const setEquippedSkin = (target: GameId | "global", skinId: string | null) => {
+    setState((prev) => ({
+      ...prev,
+      equippedSkins: {
+        ...prev.equippedSkins,
+        [target]: skinId,
+      },
+    }));
+  };
+
   const value: ArcadeContextValue = {
     ...state,
     recordGamePlayed,
     recordWin,
     unlockAchievement,
+    setEquippedSkin,
     achievementToasts,
   };
 

@@ -343,7 +343,11 @@ const App: React.FC = () => {
 
             {/* Game shell */}
             <section className="game-shell-section">
-              <GameShell controls={GAME_CONTROLS[activeGame]}>
+              <GameShell
+                controls={GAME_CONTROLS[activeGame]}
+                gameId={activeGame}
+                gameTitle={currentMeta.name}
+              >
                 {renderGame()}
               </GameShell>
             </section>

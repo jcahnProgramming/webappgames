@@ -29,6 +29,8 @@ export const ProfileDashboard: React.FC = () => {
     achievements,
     currency,
     skinsUnlocked,
+    equippedSkins,
+    setEquippedSkin,
   } = useArcade();
 
   return (
@@ -118,6 +120,8 @@ export const ProfileDashboard: React.FC = () => {
         <div className="profile-skins-grid">
           {SKINS.map((skin) => {
             const unlocked = skinsUnlocked.includes(skin.id);
+            const isEquipped =
+              equippedSkins[skin.gameId] === skin.id;
 
             return (
               <div
@@ -131,11 +135,32 @@ export const ProfileDashboard: React.FC = () => {
                   style={{ background: skin.preview }}
                 />
                 <h4>{skin.name}</h4>
+                <p className="skin-game-label">
+                  {skin.gameId === "global"
+                    ? "Global theme"
+                    : GAME_LABELS[skin.gameId]}
+                </p>
                 <p>
                   {unlocked
                     ? "Unlocked"
                     : `Locked – requires ${skin.requiresAchievement}`}
                 </p>
+
+                <button
+                  className="skin-equip-button"
+                  disabled={!unlocked}
+                  onClick={() =>
+                    unlocked
+                      ? setEquippedSkin(skin.gameId, skin.id)
+                      : undefined
+                  }
+                >
+                  {isEquipped
+                    ? "Equipped"
+                    : unlocked
+                    ? "Equip"
+                    : "Locked"}
+                </button>
               </div>
             );
           })}
