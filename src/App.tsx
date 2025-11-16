@@ -3,6 +3,7 @@ import "./App.css";
 
 import { GameShell } from "./components/GameShell";
 import { ProfileDashboard } from "./components/ProfileDashboard";
+import { useArcade } from "./context/ArcadeContext";
 import type { GameId } from "./context/ArcadeContext";
 
 import { WordleGame } from "./games/WordleGame";
@@ -153,6 +154,8 @@ const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ViewId>("arcade");
   const [activeGame, setActiveGame] = useState<GameId>("wordle");
 
+  const { currency, achievements } = useArcade();
+
   const currentMeta =
     GAME_LIST.find((g) => g.id === activeGame) ?? GAME_LIST[0];
 
@@ -193,7 +196,8 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={`site-container`}>
+    <div className="site-container">
+      {/* Top nav / chrome */}
       <header className="site-header">
         <div className="site-brand">
           <div className="site-logo">🎮</div>
@@ -237,6 +241,18 @@ const App: React.FC = () => {
             About
           </button>
         </nav>
+
+        {/* Right-side HUD: coins + achievements */}
+        <div className="site-hud">
+          <div className="hud-pill hud-pill--coins">
+            <span className="hud-label">Coins</span>
+            <span className="hud-value">💰 {currency}</span>
+          </div>
+          <div className="hud-pill hud-pill--achievements">
+            <span className="hud-label">Achievements</span>
+            <span className="hud-value">🏆 {achievements.length}</span>
+          </div>
+        </div>
       </header>
 
       <main className="site-main">
@@ -254,9 +270,7 @@ const App: React.FC = () => {
                 <ul className="site-hero-list">
                   <li>⚡ React + TypeScript SPA</li>
                   <li>📱 Optimized for mobile &amp; desktop</li>
-                  <li>
-                    🎯 Multiple genres: puzzle, logic, trivia &amp; more
-                  </li>
+                  <li>🎯 Multiple genres: puzzle, logic, trivia &amp; more</li>
                 </ul>
               </div>
               <div className="site-hero-highlight">
@@ -344,9 +358,9 @@ const App: React.FC = () => {
             <p>
               This mini arcade is built with React, TypeScript and a custom
               game framework of small, self-contained components. Each game
-              demonstrates different UI and state-management patterns&mdash;
-              from grid-based logic (Wordle, Sliding Puzzle, Minesweeper) to
-              merge mechanics (2048) and win detection (Connect Four).
+              demonstrates different UI and state-management patterns—from
+              grid-based logic (Wordle, Sliding Puzzle, Minesweeper) to merge
+              mechanics (2048) and win detection (Connect Four).
             </p>
             <p>
               The app is mobile-first and keyboard-friendly, with shared
