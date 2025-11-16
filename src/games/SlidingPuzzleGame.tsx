@@ -155,22 +155,31 @@ const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
       <div className="slide-moves">Moves: {moves}</div>
 
       <div className="slide-grid">
-        {board.map((value, index) => {
-          const isEmpty = value === EMPTY;
-          return (
-            <button
-              key={index}
-              className={`slide-tile ${
-                isEmpty ? "slide-tile-empty" : "slide-tile-filled"
-              }`}
-              onClick={() => handleTileClick(index)}
-              disabled={isEmpty}
-            >
-              {!isEmpty && value}
-            </button>
-          );
-        })}
-      </div>
+  {board.map((value, index) => {
+    const isEmpty = value === EMPTY;
+    const isCorrectSpot = !isEmpty && value === index + 1;
+
+    const tileClasses = [
+      "slide-tile",
+      isEmpty ? "slide-tile-empty" : "slide-tile-filled",
+      isCorrectSpot ? "slide-tile-correct" : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    return (
+      <button
+        key={index}
+        className={tileClasses}
+        onClick={() => handleTileClick(index)}
+        disabled={isEmpty}
+      >
+        {!isEmpty && value}
+      </button>
+    );
+  })}
+</div>
+
 
       <div className="slide-actions">
         <button className="primary-button" onClick={resetGame}>

@@ -1281,3 +1281,29 @@ body {
     text-align: center;
   }
 }
+
+.slide-tile {
+  aspect-ratio: 1 / 1;
+  border-radius: 0.75rem;
+  border: 1px solid #1f2937;
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #020617;
+  color: #e5e7eb;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.slide-tile-filled:hover {
+  background: #111827;
+  transform: translateY(-1px);
+}
+
+.slide-tile-correct {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #020617;
+}
