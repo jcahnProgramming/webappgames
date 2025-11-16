@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./App.css";
 
 import { GameShell } from "./components/GameShell";
+import { ProfileDashboard } from "./components/ProfileDashboard";
+import type { GameId } from "./context/ArcadeContext";
 
 import { WordleGame } from "./games/WordleGame";
 import { WordSearchGame } from "./games/WordSearchGame";
@@ -15,18 +17,7 @@ import { ConnectFourGame } from "./games/ConnectFourGame";
 import { RpslsGame } from "./games/RpslsGame";
 import { MinesweeperGame } from "./games/MinesweeperGame";
 
-type GameId =
-  | "wordle"
-  | "wordsearch"
-  | "sudoku"
-  | "tictactoe"
-  | "game2048"
-  | "memory"
-  | "sliding"
-  | "trivia"
-  | "connect4"
-  | "rpsls"
-  | "minesweeper";
+type ViewId = "arcade" | "profile" | "about";
 
 type GameMeta = {
   id: GameId;
@@ -159,6 +150,7 @@ const GAME_CONTROLS: Record<GameId, string[]> = {
 };
 
 const App: React.FC = () => {
+  const [activeView, setActiveView] = useState<ViewId>("arcade");
   const [activeGame, setActiveGame] = useState<GameId>("wordle");
 
   const currentMeta =
@@ -201,7 +193,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="site-container">
+    <div className={`site-container`}>
       <header className="site-header">
         <div className="site-brand">
           <div className="site-logo">🎮</div>
@@ -212,91 +204,158 @@ const App: React.FC = () => {
             </p>
           </div>
         </div>
+
+        <nav className="site-nav">
+          <button
+            className={
+              activeView === "arcade"
+                ? "site-nav-item site-nav-item--active"
+                : "site-nav-item"
+            }
+            onClick={() => setActiveView("arcade")}
+          >
+            Arcade
+          </button>
+          <button
+            className={
+              activeView === "profile"
+                ? "site-nav-item site-nav-item--active"
+                : "site-nav-item"
+            }
+            onClick={() => setActiveView("profile")}
+          >
+            Profile
+          </button>
+          <button
+            className={
+              activeView === "about"
+                ? "site-nav-item site-nav-item--active"
+                : "site-nav-item"
+            }
+            onClick={() => setActiveView("about")}
+          >
+            About
+          </button>
+        </nav>
       </header>
 
       <main className="site-main">
-        {/* Hero section */}
-        <section className="site-hero">
-          <div className="site-hero-text">
-            <h2>Playful, responsive, and built for the browser.</h2>
+        {activeView === "arcade" && (
+          <>
+            {/* Hero section */}
+            <section className="site-hero">
+              <div className="site-hero-text">
+                <h2>Playful, responsive, and built for the browser.</h2>
+                <p>
+                  This mini arcade doubles as a portfolio piece: each game shows
+                  off frontend state management, game logic, and mobile-first
+                  UI.
+                </p>
+                <ul className="site-hero-list">
+                  <li>⚡ React + TypeScript SPA</li>
+                  <li>📱 Optimized for mobile &amp; desktop</li>
+                  <li>
+                    🎯 Multiple genres: puzzle, logic, trivia &amp; more
+                  </li>
+                </ul>
+              </div>
+              <div className="site-hero-highlight">
+                <span className="site-hero-label">Now playing</span>
+                <h3 className="site-hero-game-name">{currentMeta.name}</h3>
+                <p className="site-hero-game-tagline">
+                  {currentMeta.tagline}
+                </p>
+                <button
+                  className="primary-button site-hero-play"
+                  onClick={scrollToGame}
+                >
+                  Jump into game
+                </button>
+              </div>
+            </section>
+
+            {/* Game picker */}
+            <section className="game-picker">
+              <div className="game-picker-header">
+                <div>
+                  <h2>Choose a game</h2>
+                  <p className="game-picker-subtitle">
+                    Tap a game to load it below. Great for quick play sessions
+                    or demoing your frontend chops.
+                  </p>
+                </div>
+                <span className="game-picker-count">
+                  {GAME_LIST.length} games and counting
+                </span>
+              </div>
+
+              <div className="game-chip-row">
+                {GAME_LIST.map((game) => (
+                  <button
+                    key={game.id}
+                    className={[
+                      "game-chip",
+                      game.id === activeGame ? "game-chip--active" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    onClick={() => setActiveGame(game.id)}
+                  >
+                    <span className="game-chip-name">{game.shortName}</span>
+                    {game.badge && (
+                      <span className="game-chip-badge">{game.badge}</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+
+              <div className="game-detail">
+                <div className="game-detail-text">
+                  <h3>{currentMeta.name}</h3>
+                  <p>{currentMeta.tagline}</p>
+                </div>
+                <button
+                  className="secondary-button game-detail-play"
+                  onClick={scrollToGame}
+                >
+                  Scroll to game
+                </button>
+              </div>
+            </section>
+
+            {/* Game shell */}
+            <section className="game-shell-section">
+              <GameShell controls={GAME_CONTROLS[activeGame]}>
+                {renderGame()}
+              </GameShell>
+            </section>
+          </>
+        )}
+
+        {activeView === "profile" && (
+          <section className="profile-section-wrapper">
+            <ProfileDashboard />
+          </section>
+        )}
+
+        {activeView === "about" && (
+          <section className="about-section">
+            <h2>How this arcade is built</h2>
             <p>
-              This mini arcade doubles as a portfolio piece: each game shows off
-              frontend state management, game logic, and mobile-first UI.
+              This mini arcade is built with React, TypeScript and a custom
+              game framework of small, self-contained components. Each game
+              demonstrates different UI and state-management patterns&mdash;
+              from grid-based logic (Wordle, Sliding Puzzle, Minesweeper) to
+              merge mechanics (2048) and win detection (Connect Four).
             </p>
-            <ul className="site-hero-list">
-              <li>⚡ React + TypeScript SPA</li>
-              <li>📱 Optimized for mobile &amp; desktop</li>
-              <li>🎯 Multiple genres: puzzle, logic, trivia &amp; more</li>
-            </ul>
-          </div>
-          <div className="site-hero-highlight">
-            <span className="site-hero-label">Now playing</span>
-            <h3 className="site-hero-game-name">{currentMeta.name}</h3>
-            <p className="site-hero-game-tagline">{currentMeta.tagline}</p>
-            <button
-              className="primary-button site-hero-play"
-              onClick={scrollToGame}
-            >
-              Jump into game
-            </button>
-          </div>
-        </section>
-
-        {/* Game picker */}
-        <section className="game-picker">
-          <div className="game-picker-header">
-            <div>
-              <h2>Choose a game</h2>
-              <p className="game-picker-subtitle">
-                Tap a game to load it below. Great for quick play sessions or
-                demoing your frontend chops.
-              </p>
-            </div>
-            <span className="game-picker-count">
-              {GAME_LIST.length} games and counting
-            </span>
-          </div>
-
-          <div className="game-chip-row">
-            {GAME_LIST.map((game) => (
-              <button
-                key={game.id}
-                className={[
-                  "game-chip",
-                  game.id === activeGame ? "game-chip--active" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                onClick={() => setActiveGame(game.id)}
-              >
-                <span className="game-chip-name">{game.shortName}</span>
-                {game.badge && (
-                  <span className="game-chip-badge">{game.badge}</span>
-                )}
-              </button>
-            ))}
-          </div>
-
-          <div className="game-detail">
-            <div className="game-detail-text">
-              <h3>{currentMeta.name}</h3>
-              <p>{currentMeta.tagline}</p>
-            </div>
-            <button
-              className="secondary-button game-detail-play"
-              onClick={scrollToGame}
-            >
-              Scroll to game
-            </button>
-          </div>
-        </section>
-
-        {/* Game shell */}
-        <section className="game-shell-section">
-          <GameShell controls={GAME_CONTROLS[activeGame]}>
-            {renderGame()}
-          </GameShell>
-        </section>
+            <p>
+              The app is mobile-first and keyboard-friendly, with shared
+              components like the game shell, a global arcade context for
+              stats/achievements, and simple theming that can be extended with
+              skins and a cosmetic store in the future.
+            </p>
+          </section>
+        )}
       </main>
 
       <footer className="site-footer">
