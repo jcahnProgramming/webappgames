@@ -99,28 +99,38 @@ export const SlidingPuzzleGame: React.FC = () => {
     tryMoveTileAtIndex(index);
   };
 
-  const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
-    if (status !== "playing") return;
+const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+  if (
+    e.key === "ArrowUp" ||
+    e.key === "ArrowDown" ||
+    e.key === "ArrowLeft" ||
+    e.key === "ArrowRight"
+  ) {
+    e.preventDefault();
+  }
 
-    const emptyIndex = board.indexOf(EMPTY);
-    const { r, c } = indexToRC(emptyIndex);
+  if (status !== "playing") return;
 
-    let targetIndex: number | null = null;
+  const emptyIndex = board.indexOf(EMPTY);
+  const { r, c } = indexToRC(emptyIndex);
 
-    if (e.key === "ArrowUp" && r < SIZE - 1) {
-      targetIndex = rcToIndex(r + 1, c);
-    } else if (e.key === "ArrowDown" && r > 0) {
-      targetIndex = rcToIndex(r - 1, c);
-    } else if (e.key === "ArrowLeft" && c < SIZE - 1) {
-      targetIndex = rcToIndex(r, c + 1);
-    } else if (e.key === "ArrowRight" && c > 0) {
-      targetIndex = rcToIndex(r, c - 1);
-    }
+  let targetIndex: number | null = null;
 
-    if (targetIndex !== null) {
-      tryMoveTileAtIndex(targetIndex);
-    }
-  };
+  if (e.key === "ArrowUp" && r < SIZE - 1) {
+    targetIndex = rcToIndex(r + 1, c);
+  } else if (e.key === "ArrowDown" && r > 0) {
+    targetIndex = rcToIndex(r - 1, c);
+  } else if (e.key === "ArrowLeft" && c < SIZE - 1) {
+    targetIndex = rcToIndex(r, c + 1);
+  } else if (e.key === "ArrowRight" && c > 0) {
+    targetIndex = rcToIndex(r, c - 1);
+  }
+
+  if (targetIndex !== null) {
+    tryMoveTileAtIndex(targetIndex);
+  }
+};
+
 
   const resetGame = () => {
     setBoard(createShuffledBoard());

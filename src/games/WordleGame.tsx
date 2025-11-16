@@ -1,198 +1,181 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
+
+type WordleStatus = "playing" | "won" | "lost";
 
 type LetterStatus = "correct" | "present" | "absent" | "empty";
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
 
-// Very small word list to keep it simple.
-// You can expand this later or load from a JSON file.
-const WORD_LIST = [
-  "APPLE",
-  "BRAIN",
-  "SMART",
-  "CRANE",
-  "CODES",
-  "LIGHT",
-  "POINT",
-  "TRACK",
-  "WORDS",
-  "SHARE",
-];
+// Simple built-in word list – replace/expand as you like
+const WORDS = ["APPLE", "REACT", "GAMES", "STACK", "CRANE", "WORLD", "TYPES"];
 
-const KEYBOARD_ROWS = [
-  "QWERTYUIOP".split(""),
-  "ASDFGHJKL".split(""),
-  ["ENTER", ..."ZXCVBNM".split(""), "DEL"],
-];
+function pickRandomWord(): string {
+  const idx = Math.floor(Math.random() * WORDS.length);
+  return WORDS[idx];
+}
 
-type GameStatus = "playing" | "won" | "lost";
+function evaluateGuess(guess: string, target: string): LetterStatus[] {
+  const result: LetterStatus[] = Array(WORD_LENGTH).fill("absent");
+  const targetChars = target.split("");
+
+  // First pass – correct positions
+  const usedTarget = targetChars.map((ch) => ch);
+  for (let i = 0; i < WORD_LENGTH; i++) {
+    if (guess[i] === target[i]) {
+      result[i] = "correct";
+      usedTarget[i] = "*"; // mark as used
+    }
+  }
+
+  // Second pass – present but wrong position
+  for (let i = 0; i < WORD_LENGTH; i++) {
+    if (result[i] === "correct") continue;
+
+    const idx = usedTarget.indexOf(guess[i]);
+    if (idx !== -1) {
+      result[i] = "present";
+      usedTarget[idx] = "*";
+    } else {
+      result[i] = "absent";
+    }
+  }
+
+  return result;
+}
 
 export const WordleGame: React.FC = () => {
-  const [answer, setAnswer] = useState<string>(() => {
-  return WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
-});
+  const [target, setTarget] = useState<string>(() => pickRandomWord());
   const [guesses, setGuesses] = useState<string[]>([]);
   const [currentGuess, setCurrentGuess] = useState<string>("");
-  const [status, setStatus] = useState<GameStatus>("playing");
+  const [status, setStatus] = useState<WordleStatus>("playing");
   const [message, setMessage] = useState<string | null>(null);
 
-  const resetGame = () => {
-  const randomWord =
-    WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
-  setAnswer(randomWord);
-  setGuesses([]);
-  setCurrentGuess("");
-  setStatus("playing");
-  setMessage(null);
-};
+  const rows = Array.from({ length: MAX_GUESSES }).map((_, i) => guesses[i] ?? "");
 
-  const handleAddLetter = (letter: string) => {
+  const handleLetter = (letter: string) => {
     if (status !== "playing") return;
     if (currentGuess.length >= WORD_LENGTH) return;
-    setCurrentGuess((prev) => prev + letter);
+
+    const upper = letter.toUpperCase();
+    if (!/^[A-Z]$/.test(upper)) return;
+
+    setCurrentGuess((prev) => prev + upper);
     setMessage(null);
   };
 
-  const handleDeleteLetter = () => {
+  const handleBackspace = () => {
     if (status !== "playing") return;
+    if (currentGuess.length === 0) return;
+
     setCurrentGuess((prev) => prev.slice(0, -1));
     setMessage(null);
   };
 
-  const handleSubmitGuess = () => {
+  const handleSubmit = () => {
     if (status !== "playing") return;
+
     if (currentGuess.length !== WORD_LENGTH) {
       setMessage("Not enough letters.");
       return;
     }
 
-    const newGuess = currentGuess.toUpperCase();
-
-    // Optional dictionary validation could go here.
-
-    const newGuesses = [...guesses, newGuess];
-    setGuesses(newGuesses);
+    const guess = currentGuess.toUpperCase();
+    const nextGuesses = [...guesses, guess];
+    setGuesses(nextGuesses);
     setCurrentGuess("");
 
-    if (newGuess === answer) {
+    if (guess === target) {
       setStatus("won");
-      setMessage("Nice! You got it!");
+      setMessage("You got it! 🎉");
       return;
     }
 
-    if (newGuesses.length >= MAX_GUESSES) {
+    if (nextGuesses.length >= MAX_GUESSES) {
       setStatus("lost");
-      setMessage(`Out of guesses! The word was ${answer}.`);
+      setMessage(`Out of guesses. The word was ${target}.`);
+      return;
+    }
+
+    setMessage(null);
+  };
+
+  const resetGame = () => {
+    setTarget(pickRandomWord());
+    setGuesses([]);
+    setCurrentGuess("");
+    setStatus("playing");
+    setMessage(null);
+  };
+
+  const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+    const key = e.key;
+
+    if (/^[a-zA-Z]$/.test(key)) {
+      e.preventDefault();
+      handleLetter(key);
+      return;
+    }
+
+    if (key === "Backspace") {
+      e.preventDefault();
+      handleBackspace();
+      return;
+    }
+
+    if (key === "Enter") {
+      e.preventDefault();
+      handleSubmit();
       return;
     }
   };
 
-  const handleKeyPress = (key: string) => {
-    if (key === "ENTER") {
-      handleSubmitGuess();
-    } else if (key === "DEL") {
-      handleDeleteLetter();
-    } else if (/^[A-Z]$/.test(key)) {
-      handleAddLetter(key);
-    }
-  };
+  const getCellStatus = (rowIndex: number, colIndex: number): LetterStatus => {
+    const guess = rows[rowIndex];
+    const char = guess[colIndex];
 
-  // Compute per-letter status for keyboard coloring
-  const letterStatuses: Record<string, LetterStatus> = useMemo(() => {
-    const map: Record<string, LetterStatus> = {};
-    for (const guess of guesses) {
-      for (let i = 0; i < guess.length; i++) {
-        const ch = guess[i];
-        if (answer[i] === ch) {
-          map[ch] = "correct";
-        } else if (answer.includes(ch)) {
-          if (map[ch] !== "correct") map[ch] = "present";
-        } else {
-          if (!map[ch]) map[ch] = "absent";
-        }
-      }
-    }
-    return map;
-  }, [guesses, answer]);
+    if (!char) return "empty";
+    if (rowIndex >= guesses.length) return "empty";
 
-  const getTileStatus = (rowIndex: number, colIndex: number): LetterStatus => {
-    const guess = guesses[rowIndex];
-    const isCurrentRow = rowIndex === guesses.length;
-
-    if (!guess && !isCurrentRow) return "empty";
-
-    if (isCurrentRow) {
-      const letter = currentGuess[colIndex];
-      return letter ? "empty" : "empty";
-    }
-
-    const letter = guess[colIndex];
-    if (!letter) return "empty";
-
-    if (answer[colIndex] === letter) return "correct";
-    if (answer.includes(letter)) return "present";
-    return "absent";
-  };
-
-  const getTileLetter = (rowIndex: number, colIndex: number): string => {
-    const guess = guesses[rowIndex];
-    const isCurrentRow = rowIndex === guesses.length;
-
-    if (guess) {
-      return guess[colIndex] ?? "";
-    }
-
-    if (isCurrentRow) {
-      return currentGuess[colIndex] ?? "";
-    }
-
-    return "";
+    const evaluation = evaluateGuess(guesses[rowIndex], target);
+    return evaluation[colIndex];
   };
 
   return (
-    <div className="wordle">
-      <div className="wordle-header">
-        <h2>Wordle Clone</h2>
-        <p>Guess the {WORD_LENGTH}-letter word in {MAX_GUESSES} tries.</p>
-      </div>
+    <div
+      className="wordle"
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+    >
+      <h2>Wordle Clone</h2>
+      <p className="wordle-subtitle">
+        Type letters and press Enter to submit. Backspace deletes.
+      </p>
 
       <div className="wordle-grid">
-        {Array.from({ length: MAX_GUESSES }).map((_, rowIndex) => (
+        {rows.map((row, rowIndex) => (
           <div key={rowIndex} className="wordle-row">
             {Array.from({ length: WORD_LENGTH }).map((_, colIndex) => {
-              const status = getTileStatus(rowIndex, colIndex);
-              const letter = getTileLetter(rowIndex, colIndex);
-              return (
-                <div
-                  key={colIndex}
-                  className={`wordle-tile wordle-tile--${status}`}
-                >
-                  {letter}
-                </div>
-              );
-            })}
-          </div>
-        ))}
-      </div>
+              const guessChar =
+                rowIndex === guesses.length
+                  ? currentGuess[colIndex] ?? ""
+                  : row[colIndex] ?? "";
 
-      <div className="wordle-keyboard">
-        {KEYBOARD_ROWS.map((row, rowIndex) => (
-          <div key={rowIndex} className="wordle-keyboard-row">
-            {row.map((key) => {
-              const isActionKey = key === "ENTER" || key === "DEL";
-              const status =
-                key.length === 1 ? letterStatuses[key] ?? "empty" : "empty";
+              const statusForCell = getCellStatus(rowIndex, colIndex);
+
+              const cellClass = [
+                "wordle-cell",
+                statusForCell === "correct" ? "wordle-cell-correct" : "",
+                statusForCell === "present" ? "wordle-cell-present" : "",
+                statusForCell === "absent" ? "wordle-cell-absent" : "",
+              ]
+                .filter(Boolean)
+                .join(" ");
+
               return (
-                <button
-                  key={key}
-                  className={`wordle-key ${
-                    isActionKey ? "wordle-key--wide" : ""
-                  } wordle-key--${status}`}
-                  onClick={() => handleKeyPress(key)}
-                >
-                  {key}
-                </button>
+                <div key={colIndex} className={cellClass}>
+                  {guessChar}
+                </div>
               );
             })}
           </div>
@@ -202,7 +185,14 @@ export const WordleGame: React.FC = () => {
       {message && <div className="wordle-message">{message}</div>}
 
       <div className="wordle-actions">
-        <button className="primary-button" onClick={resetGame}>
+        <button
+          className="primary-button"
+          onClick={handleSubmit}
+          disabled={status !== "playing"}
+        >
+          Submit Guess
+        </button>
+        <button className="secondary-button" onClick={resetGame}>
           New Word
         </button>
       </div>

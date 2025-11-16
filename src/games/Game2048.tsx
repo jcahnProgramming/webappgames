@@ -177,12 +177,22 @@ export const Game2048: React.FC = () => {
     setStatus("playing");
   };
 
-  const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
-    if (e.key === "ArrowUp") handleMove("up");
-    if (e.key === "ArrowDown") handleMove("down");
-    if (e.key === "ArrowLeft") handleMove("left");
-    if (e.key === "ArrowRight") handleMove("right");
-  };
+const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+  if (
+    e.key === "ArrowUp" ||
+    e.key === "ArrowDown" ||
+    e.key === "ArrowLeft" ||
+    e.key === "ArrowRight"
+  ) {
+    e.preventDefault();
+  }
+
+  if (e.key === "ArrowUp") handleMove("up");
+  if (e.key === "ArrowDown") handleMove("down");
+  if (e.key === "ArrowLeft") handleMove("left");
+  if (e.key === "ArrowRight") handleMove("right");
+};
+
 
   const statusText =
     status === "playing"
