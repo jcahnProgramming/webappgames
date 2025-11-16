@@ -1,0 +1,1007 @@
+/* Root layout */
+
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #111827;
+  background-color: #0f172a;
+}
+
+body {
+  margin: 0;
+}
+
+.app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: #e5e7eb;
+}
+
+.app-header {
+  padding: 1rem 1.5rem;
+  text-align: center;
+  background: #020617;
+  border-bottom: 1px solid #111827;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.app-subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.game-nav {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.5rem 1rem;
+  background: #020617;
+}
+
+.game-nav-button {
+  flex-shrink: 0;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.game-nav-button--active {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  border-top: 1px solid #111827;
+  background: #020617;
+}
+
+/* Game shell */
+
+.game-shell {
+  width: 100%;
+  max-width: 420px;
+  background: #020617;
+  border-radius: 1.25rem;
+  padding: 1rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid #1f2937;
+}
+
+/* Wordle styles */
+
+.wordle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.wordle-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.wordle-header p {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.wordle-grid {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.wordle-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.2rem;
+}
+
+.wordle-tile {
+  aspect-ratio: 1 / 1;
+  border-radius: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+}
+
+.wordle-tile--correct {
+  background: #16a34a;
+  border-color: #16a34a;
+}
+
+.wordle-tile--present {
+  background: #eab308;
+  border-color: #eab308;
+}
+
+.wordle-tile--absent {
+  background: #111827;
+  border-color: #111827;
+  color: #6b7280;
+}
+
+.wordle-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.wordle-keyboard-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.wordle-key {
+  min-width: 2rem;
+  padding: 0.4rem 0.25rem;
+  border-radius: 0.4rem;
+  border: none;
+  background: #111827;
+  color: #e5e7eb;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.wordle-key--wide {
+  min-width: 3rem;
+}
+
+.wordle-key--correct {
+  background: #16a34a;
+}
+
+.wordle-key--present {
+  background: #eab308;
+  color: #111827;
+}
+
+.wordle-key--absent {
+  background: #020617;
+  color: #6b7280;
+}
+
+.wordle-message {
+  font-size: 0.8rem;
+  text-align: center;
+  color: #fbbf24;
+}
+
+.wordle-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+.primary-button {
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: none;
+  background: #2563eb;
+  color: #e5e7eb;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Placeholder */
+
+.placeholder {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #9ca3af;
+  padding: 1rem 0;
+}
+
+/* Mobile tweaks */
+
+@media (min-width: 768px) {
+  .app-header h1 {
+    font-size: 1.6rem;
+  }
+}
+
+/* Word Search */
+
+.word-search {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.ws-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0.15rem;
+  user-select: none;
+}
+
+.ws-cell {
+  aspect-ratio: 1/1;
+  background: #0f172a;
+  border: 1px solid #1f2937;
+  border-radius: 0.25rem;
+  color: #e5e7eb;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ws-drag {
+  background: #1e3a8a;
+}
+
+.ws-found {
+  background: #16a34a;
+}
+
+.ws-words {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ws-word {
+  padding: 0.2rem 0.4rem;
+  font-size: 0.8rem;
+  background: #1e293b;
+  border-radius: 0.3rem;
+}
+
+.ws-word-found {
+  background: #16a34a;
+  color: #111;
+}
+
+/* Sudoku */
+
+.sudoku {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+}
+
+.sudoku-subtitle {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.sudoku-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  width: 100%;
+  max-width: 360px;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.sudoku-cell {
+  aspect-ratio: 1 / 1;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+.sudoku-cell--fixed {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+.sudoku-cell--selected {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}
+
+.sudoku-cell--error {
+  background: #7f1d1d;
+}
+
+.sudoku-cell--vborder {
+  border-right-width: 3px;
+}
+
+.sudoku-cell--hborder {
+  border-bottom-width: 3px;
+}
+
+.sudoku-numpad {
+  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.4rem;
+  width: 100%;
+  max-width: 360px;
+}
+
+.sudoku-num-btn {
+  padding: 0.45rem 0;
+  border-radius: 999px;
+  border: none;
+  background: #111827;
+  color: #e5e7eb;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.sudoku-num-btn--clear {
+  grid-column: span 2;
+  background: #4b5563;
+}
+
+.sudoku-actions {
+  margin-top: 0.5rem;
+}
+
+.sudoku-message {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #4ade80;
+}
+
+
+/* Tic-Tac-Toe */
+
+.ttt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+}
+
+.ttt-subtitle {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.ttt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+  width: 100%;
+  max-width: 260px;
+}
+
+.ttt-cell {
+  aspect-ratio: 1 / 1;
+  border-radius: 0.75rem;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.ttt-cell:hover {
+  background: #111827;
+}
+
+.ttt-status {
+  font-size: 0.9rem;
+  color: #e5e7eb;
+}
+
+.ttt-actions {
+  margin-top: 0.25rem;
+}
+
+
+/* 2048 */
+
+.g2048 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+  outline: none; /* for keyboard focus */
+}
+
+.g2048-subtitle {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.g2048-score {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #facc15;
+}
+
+.g2048-board {
+  margin-top: 0.25rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.25rem;
+  width: 100%;
+  max-width: 320px;
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+  background: #111827;
+}
+
+.g2048-cell {
+  aspect-ratio: 1 / 1;
+  border-radius: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.g2048-cell-empty {
+  background: #020617;
+  border: 1px solid #1f2937;
+  color: transparent;
+}
+
+/* Simple value-based coloring */
+.g2048-cell-2    { background: #e5e7eb; color: #111827; }
+.g2048-cell-4    { background: #d1d5db; color: #111827; }
+.g2048-cell-8    { background: #f97316; color: #111827; }
+.g2048-cell-16   { background: #fb923c; color: #111827; }
+.g2048-cell-32   { background: #f97373; color: #111827; }
+.g2048-cell-64   { background: #ef4444; color: #111827; }
+.g2048-cell-128  { background: #facc15; color: #111827; font-size: 0.95rem; }
+.g2048-cell-256  { background: #a3e635; color: #111827; font-size: 0.95rem; }
+.g2048-cell-512  { background: #22c55e; color: #111827; font-size: 0.9rem; }
+.g2048-cell-1024 { background: #14b8a6; color: #111827; font-size: 0.9rem; }
+.g2048-cell-2048 { background: #38bdf8; color: #111827; font-size: 0.85rem; }
+
+.g2048-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.g2048-controls button {
+  border-radius: 999px;
+  border: none;
+  padding: 0.3rem 0.8rem;
+  background: #111827;
+  color: #e5e7eb;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.g2048-controls-middle {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.g2048-actions {
+  margin-top: 0.25rem;
+}
+
+
+/* Memory Match */
+
+.memory {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+}
+
+.memory-subtitle {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.memory-stats {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+}
+
+.memory-won {
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.memory-grid {
+  margin-top: 0.4rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.memory-card {
+  aspect-ratio: 3 / 4;
+  border-radius: 0.75rem;
+  border: 1px solid #1f2937;
+  background: #020617;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.15s ease, background 0.15s ease, border 0.15s ease;
+}
+
+.memory-card--down:hover {
+  background: #111827;
+}
+
+.memory-card-inner {
+  font-size: 1.6rem;
+}
+
+.memory-card--up {
+  background: #1f2937;
+}
+
+.memory-card--matched {
+  background: #16a34a;
+  border-color: #16a34a;
+}
+
+.memory-actions {
+  margin-top: 0.4rem;
+}
+
+
+/* Sliding Puzzle */
+
+.slide {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+  outline: none; /* for keyboard focus */
+}
+
+.slide-subtitle {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.slide-moves {
+  font-size: 0.85rem;
+  color: #e5e7eb;
+}
+
+.slide-grid {
+  margin-top: 0.4rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.3rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.slide-tile {
+  aspect-ratio: 1 / 1;
+  border-radius: 0.75rem;
+  border: 1px solid #1f2937;
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #020617;
+  color: #e5e7eb;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.slide-tile-filled:hover {
+  background: #111827;
+  transform: translateY(-1px);
+}
+
+.slide-tile-empty {
+  background: #020617;
+  border-style: dashed;
+  border-color: #374151;
+  cursor: default;
+}
+
+.slide-actions {
+  margin-top: 0.4rem;
+}
+
+
+/* Trivia Quiz */
+
+.trivia {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: left;
+  align-items: center;
+}
+
+.trivia-progress {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+}
+
+.trivia-question {
+  width: 100%;
+  max-width: 420px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e5e7eb;
+  background: #020617;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid #1f2937;
+}
+
+.trivia-options {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.trivia-option {
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border 0.15s ease, transform 0.1s ease;
+}
+
+.trivia-option:hover {
+  background: #111827;
+  transform: translateY(-1px);
+}
+
+.trivia-option--selected {
+  border-color: #2563eb;
+}
+
+.trivia-option--correct {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #111827;
+}
+
+.trivia-option--incorrect {
+  background: #7f1d1d;
+  border-color: #7f1d1d;
+}
+
+.trivia-actions {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.trivia-result {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  background: #020617;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #1f2937;
+}
+
+.trivia-result h3 {
+  margin: 0 0 0.25rem;
+}
+
+.trivia-result p {
+  margin: 0.15rem 0;
+}
+
+
+/* Connect Four */
+
+.c4 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+}
+
+.c4-subtitle {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.c4-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.c4-columns {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.15rem;
+  width: 100%;
+  max-width: 350px;
+}
+
+.c4-col-button {
+  padding: 0.2rem 0;
+  border-radius: 999px;
+  border: none;
+  background: #0f172a;
+  color: #e5e7eb;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.c4-grid {
+  margin-top: 0.1rem;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 0.15rem;
+  width: 100%;
+  max-width: 350px;
+  padding: 0.4rem;
+  border-radius: 0.9rem;
+  background: #1d4ed8; /* blue board */
+}
+
+.c4-cell {
+  aspect-ratio: 1 / 1;
+  border-radius: 999px;
+  background: #020617;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.c4-disc {
+  width: 80%;
+  height: 80%;
+  border-radius: 999px;
+  background: #020617;
+}
+
+.c4-cell-red .c4-disc {
+  background: #ef4444;
+}
+
+.c4-cell-yellow .c4-disc {
+  background: #eab308;
+}
+
+.c4-actions {
+  margin-top: 0.4rem;
+}
+
+
+/* Rock–Paper–Scissors–Lizard–Spock */
+
+.rpsls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+}
+
+.rpsls-subtitle {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.rpsls-stats {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+}
+
+.rpsls-choices {
+  margin-top: 0.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.rpsls-choice {
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border 0.15s ease, transform 0.1s ease;
+}
+
+.rpsls-choice:hover {
+  background: #111827;
+  transform: translateY(-1px);
+}
+
+.rpsls-result {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.rpsls-result-main {
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.rpsls-result-detail {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.rpsls-actions {
+  margin-top: 0.4rem;
+}
+
+/* Minesweeper Lite */
+
+.mine {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+}
+
+.mine-subtitle {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.mine-info {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+}
+
+.mine-controls {
+  margin-top: 0.25rem;
+}
+
+.mine-flag-toggle {
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.mine-flag-toggle--active {
+  background: #f97316;
+  border-color: #f97316;
+  color: #111827;
+}
+
+.mine-grid {
+  margin-top: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.15rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.mine-cell {
+  aspect-ratio: 1 / 1;
+  border-radius: 0.4rem;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mine-cell-hidden {
+  background: #020617;
+}
+
+.mine-cell-hidden:hover {
+  background: #111827;
+}
+
+.mine-cell-open {
+  background: #0f172a;
+}
+
+.mine-cell-mine {
+  background: #7f1d1d;
+  border-color: #7f1d1d;
+}
+
+.mine-cell-flagged {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.mine-actions {
+  margin-top: 0.5rem;
+}
