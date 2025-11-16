@@ -5,6 +5,7 @@ import { GameShell } from "./components/GameShell";
 import { ProfileDashboard } from "./components/ProfileDashboard";
 import { useArcade } from "./context/ArcadeContext";
 import type { GameId } from "./context/ArcadeContext";
+import AchievementToastContainer from "./components/AchievementToastContainer";
 
 import { WordleGame } from "./games/WordleGame";
 import { WordSearchGame } from "./games/WordSearchGame";
@@ -197,6 +198,9 @@ const App: React.FC = () => {
 
   return (
     <div className="site-container">
+      {/* Global achievement toasts */}
+      <AchievementToastContainer />
+
       {/* Top nav / chrome */}
       <header className="site-header">
         <div className="site-brand">

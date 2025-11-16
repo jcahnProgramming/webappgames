@@ -3,8 +3,8 @@ import React, {
   createContext,
   useContext,
   useEffect,
-  useState,
   useRef,
+  useState,
 } from "react";
 import type { ReactNode } from "react";
 
@@ -132,15 +132,21 @@ type ArcadeState = {
   skinsUnlocked: string[]; // skin ids
 };
 
+type AchievementToast = {
+  id: string;
+  label: string;
+};
+
 type RecordGameWinOptions = {
   score?: number;
   timeSeconds?: number;
 };
 
-type ArcadeContextValue = ArcadeState & {
+export type ArcadeContextValue = ArcadeState & {
   recordGamePlayed: (gameId: GameId) => void;
   recordWin: (gameId: GameId, options?: RecordGameWinOptions) => void;
   unlockAchievement: (achievementId: string) => void;
+  achievementToasts: AchievementToast[];
 };
 
 const STORAGE_KEY = "webarcade-arcade-state-v1";
@@ -259,6 +265,10 @@ export const ArcadeProvider: React.FC<{ children: ReactNode }> = ({
     }
   });
 
+  const [achievementToasts, setAchievementToasts] = useState<
+    AchievementToast[]
+  >([]);
+
   // Persist to localStorage whenever state changes
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -283,56 +293,79 @@ export const ArcadeProvider: React.FC<{ children: ReactNode }> = ({
     };
   };
 
-  const recordGamePlayed = (gameId: GameId) => {
-  setState((prev) => {
-    const perGame = prev.perGameStats[gameId] ?? defaultPerGameStats;
+  const queueAchievementToast = (achievementId: string) => {
+    const def = ACHIEVEMENTS.find((a) => a.id === achievementId);
+    if (!def) return;
 
-    const totalGamesPlayed = prev.globalStats.totalGamesPlayed + 1;
+    const toastId = `${achievementId}-${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2, 7)}`;
 
-    // Recompute favorite game by plays in a type-safe way
-    const entries = Object.entries(
-      prev.perGameStats
-    ) as [GameId, PerGameStats][];
-
-    let favoriteId: GameId = prev.globalStats.favoriteGame;
-    let maxPlays = prev.perGameStats[favoriteId]?.plays ?? 0;
-
-    for (const [id, stats] of entries) {
-      const plays = stats.plays ?? 0;
-      if (plays > maxPlays) {
-        maxPlays = plays;
-        favoriteId = id;
-      }
-    }
-
-    let next: ArcadeState = {
+    setAchievementToasts((prev) => [
       ...prev,
-      globalStats: {
-        totalGamesPlayed,
-        longestSession: prev.globalStats.longestSession,
-        favoriteGame: favoriteId,
-      },
-      perGameStats: {
-        ...prev.perGameStats,
-        [gameId]: {
-          ...perGame,
-          plays: (perGame.plays ?? 0) + 1,
+      { id: toastId, label: def.name },
+    ]);
+
+    setTimeout(() => {
+      setAchievementToasts((prev) =>
+        prev.filter((t) => t.id !== toastId)
+      );
+    }, 4000);
+  };
+
+  const recordGamePlayed = (gameId: GameId) => {
+    setState((prev) => {
+      const perGame = prev.perGameStats[gameId] ?? defaultPerGameStats;
+      const totalGamesPlayed = prev.globalStats.totalGamesPlayed + 1;
+
+      // Recompute favorite game by plays in a type-safe way
+      const entries = Object.entries(
+        prev.perGameStats
+      ) as [GameId, PerGameStats][];
+
+      let favoriteId: GameId = prev.globalStats.favoriteGame;
+      let maxPlays = prev.perGameStats[favoriteId]?.plays ?? 0;
+
+      for (const [id, stats] of entries) {
+        const plays = stats.plays ?? 0;
+        if (plays > maxPlays) {
+          maxPlays = plays;
+          favoriteId = id;
+        }
+      }
+
+      let next: ArcadeState = {
+        ...prev,
+        globalStats: {
+          totalGamesPlayed,
+          longestSession: prev.globalStats.longestSession,
+          favoriteGame: favoriteId,
         },
-      },
-    };
+        perGameStats: {
+          ...prev.perGameStats,
+          [gameId]: {
+            ...perGame,
+            plays: (perGame.plays ?? 0) + 1,
+          },
+        },
+      };
 
-    // Auto-unlock base achievements
-    if (totalGamesPlayed === 1) {
-      next = unlockAchievementInternal(next, "first_play");
-    }
-    if (totalGamesPlayed === 10) {
-      next = unlockAchievementInternal(next, "ten_games");
-    }
+      // Auto-unlock base achievements with toasts
+      if (totalGamesPlayed === 1 && !prev.achievements.includes("first_play")) {
+        next = unlockAchievementInternal(next, "first_play");
+        queueAchievementToast("first_play");
+      }
+      if (
+        totalGamesPlayed === 10 &&
+        !prev.achievements.includes("ten_games")
+      ) {
+        next = unlockAchievementInternal(next, "ten_games");
+        queueAchievementToast("ten_games");
+      }
 
-    return updateLongestSession(next);
-  });
-};
-
+      return updateLongestSession(next);
+    });
+  };
 
   const recordWin = (gameId: GameId, options?: RecordGameWinOptions) => {
     setState((prev) => {
@@ -364,12 +397,20 @@ export const ArcadeProvider: React.FC<{ children: ReactNode }> = ({
 
       let next: ArcadeState = { ...prev, perGameStats };
 
-      // Auto-unlock some specific win achievements
-      if (gameId === "wordle") {
+      // Auto-unlock some specific win achievements + toasts
+      if (
+        gameId === "wordle" &&
+        !prev.achievements.includes("wordle_first_win")
+      ) {
         next = unlockAchievementInternal(next, "wordle_first_win");
+        queueAchievementToast("wordle_first_win");
       }
-      if (gameId === "minesweeper") {
+      if (
+        gameId === "minesweeper" &&
+        !prev.achievements.includes("minesweeper_first_win")
+      ) {
         next = unlockAchievementInternal(next, "minesweeper_first_win");
+        queueAchievementToast("minesweeper_first_win");
       }
 
       return updateLongestSession(next);
@@ -377,7 +418,14 @@ export const ArcadeProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const unlockAchievement = (achievementId: string) => {
-    setState((prev) => unlockAchievementInternal(prev, achievementId));
+    setState((prev) => {
+      if (prev.achievements.includes(achievementId)) {
+        return prev;
+      }
+      const next = unlockAchievementInternal(prev, achievementId);
+      queueAchievementToast(achievementId);
+      return next;
+    });
   };
 
   const value: ArcadeContextValue = {
@@ -385,6 +433,7 @@ export const ArcadeProvider: React.FC<{ children: ReactNode }> = ({
     recordGamePlayed,
     recordWin,
     unlockAchievement,
+    achievementToasts,
   };
 
   return (
