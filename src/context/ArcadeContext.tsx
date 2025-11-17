@@ -19,7 +19,8 @@ export type GameId =
   | "trivia"
   | "connect4"
   | "rpsls"
-  | "minesweeper";
+  | "minesweeper"
+  | "madlibs";
 
 export type GlobalStats = {
   totalGamesPlayed: number;
@@ -93,6 +94,13 @@ export const ACHIEVEMENTS: ArcadeAchievement[] = [
     rewardCurrency: 30,
     gameId: "game2048",
   },
+  {
+    id: "madlibs_first_story",
+    name: "Story Spinner",
+    description: "Complete your first Mad Libs story.",
+    rewardCurrency: 15,
+    gameId: "madlibs",
+  },
 ];
 
 export const SKINS: Skin[] = [
@@ -122,6 +130,13 @@ export const SKINS: Skin[] = [
     preview: "linear-gradient(135deg, #fb7185, #f97316)",
     requiresAchievement: "2048_1024",
   },
+  {
+    id: "madlibs_neon_quill",
+    name: "Neon Quill",
+    gameId: "madlibs",
+    preview: "linear-gradient(135deg, #a855f7, #22c55e)",
+    requiresAchievement: "madlibs_first_story",
+  },
 ];
 
 type EquippedSkins = Record<GameId | "global", string | null>;
@@ -145,9 +160,18 @@ type RecordGameWinOptions = {
   timeSeconds?: number;
 };
 
+type RecordGameResultOptions = {
+  gameId: GameId;
+  win?: boolean;
+  score?: number;
+  durationMs?: number;
+};
+
 export type ArcadeContextValue = ArcadeState & {
   recordGamePlayed: (gameId: GameId) => void;
   recordWin: (gameId: GameId, options?: RecordGameWinOptions) => void;
+  recordGameResult: (options: RecordGameResultOptions) => void;
+  addCoins: (amount: number, reason?: string) => void;
   unlockAchievement: (achievementId: string) => void;
   setEquippedSkin: (target: GameId | "global", skinId: string | null) => void;
   achievementToasts: AchievementToast[];
@@ -172,6 +196,7 @@ function createInitialPerGameStats(): Record<GameId, PerGameStats> {
     "connect4",
     "rpsls",
     "minesweeper",
+    "madlibs",
   ];
 
   const result: Partial<Record<GameId, PerGameStats>> = {};
@@ -194,6 +219,7 @@ const defaultEquippedSkins: EquippedSkins = {
   connect4: null,
   rpsls: null,
   minesweeper: null,
+  madlibs: null,
   global: null,
 };
 
@@ -443,6 +469,32 @@ export const ArcadeProvider: React.FC<{ children: ReactNode }> = ({
     });
   };
 
+  const addCoins = (amount: number, _reason?: string) => {
+    if (!amount) return;
+    setState((prev) => ({
+      ...prev,
+      currency: Math.max(0, prev.currency + amount),
+    }));
+  };
+
+  const recordGameResult = (options: RecordGameResultOptions) => {
+    const { gameId, win, score, durationMs } = options;
+
+    // Always record a play
+    recordGamePlayed(gameId);
+
+    // Optionally record a win with score / time
+    if (win) {
+      recordWin(gameId, {
+        score,
+        timeSeconds:
+          typeof durationMs === "number"
+            ? Math.max(0, Math.round(durationMs / 1000))
+            : undefined,
+      });
+    }
+  };
+
   const unlockAchievement = (achievementId: string) => {
     setState((prev) => {
       if (prev.achievements.includes(achievementId)) {
@@ -454,7 +506,10 @@ export const ArcadeProvider: React.FC<{ children: ReactNode }> = ({
     });
   };
 
-  const setEquippedSkin = (target: GameId | "global", skinId: string | null) => {
+  const setEquippedSkin = (
+    target: GameId | "global",
+    skinId: string | null
+  ) => {
     setState((prev) => ({
       ...prev,
       equippedSkins: {
@@ -468,6 +523,8 @@ export const ArcadeProvider: React.FC<{ children: ReactNode }> = ({
     ...state,
     recordGamePlayed,
     recordWin,
+    recordGameResult,
+    addCoins,
     unlockAchievement,
     setEquippedSkin,
     achievementToasts,

@@ -18,6 +18,7 @@ import { TriviaGame } from "./games/TriviaGame";
 import { ConnectFourGame } from "./games/ConnectFourGame";
 import { RpslsGame } from "./games/RpslsGame";
 import { MinesweeperGame } from "./games/MinesweeperGame";
+import { MadLibsGame } from "./games/MadLibsGame";
 
 type ViewId = "arcade" | "profile" | "about";
 
@@ -97,6 +98,13 @@ const GAME_LIST: GameMeta[] = [
     name: "Minesweeper Lite",
     tagline: "Clear the board without detonating a mine.",
   },
+  {
+    id: "madlibs",
+    shortName: "Mad Libs",
+    name: "Mad Libs Story Forge",
+    tagline: "Fill in the blanks to forge ridiculous little stories.",
+    badge: "Chill",
+  },
 ];
 
 const GAME_CONTROLS: Record<GameId, string[]> = {
@@ -149,6 +157,11 @@ const GAME_CONTROLS: Record<GameId, string[]> = {
     "Toggle 'Flag Mode' to mark suspected mines.",
     "Clear all safe cells without hitting a mine.",
   ],
+  madlibs: [
+    "Pick a template from the dropdown.",
+    "Fill in each blank with whatever words you like.",
+    "Click 'Generate Story' to see your chaotic creation.",
+  ],
 };
 
 const App: React.FC = () => {
@@ -184,6 +197,8 @@ const App: React.FC = () => {
         return <RpslsGame />;
       case "minesweeper":
         return <MinesweeperGame />;
+      case "madlibs":
+        return <MadLibsGame />;
       default:
         return null;
     }
