@@ -20,7 +20,12 @@ const GAME_LABELS: Record<GameId, string> = {
   connect4: "Connect Four",
   rpsls: "RPS Lizard Spock",
   minesweeper: "Minesweeper Lite",
+  madlibs: "Mad Libs Story Forge",
+  snake: "Snake Classic",
+  flappybird: "Flappy Bird Clone",
+  idleclicker: "Idle Clicker",
 };
+
 
 export const ProfileDashboard: React.FC = () => {
   const {

@@ -1,0 +1,99 @@
+/* --- Container Layout --- */
+.snake-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- Header --- */
+.snake-header h2 {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.snake-stats {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.snake-controls-hint {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  text-align: center;
+}
+
+/* --- Game Grid --- */
+.snake-grid {
+  width: min(400px, 95vw);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  background: #0d0d0d;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 2px solid #1a1a1a;
+  position: relative;
+}
+
+/* --- Cells --- */
+.snake-cell {
+  box-sizing: border-box;
+  border: 0.5px solid #111;
+  background: #000;
+  transition: background 0.05s linear;
+}
+
+.snake-body {
+  background: #1db954; /* Spotify green-ish */
+}
+
+.snake-head {
+  background: #54ff9c;
+  box-shadow: 0 0 6px #54ff9c;
+}
+
+.snake-food {
+  background: #ff4d2e;
+  box-shadow: 0 0 4px #ff4d2e;
+}
+
+/* --- Paused and Game Over States --- */
+.snake-grid.paused:not(.game-over) .snake-cell.snake-body {
+  opacity: 0.55;
+}
+
+.snake-grid.game-over .snake-cell.snake-body {
+  background: #8b0000 !important;
+  opacity: 0.8;
+}
+
+/* --- Footer --- */
+.snake-footer {
+  margin-top: 0.5rem;
+}
+
+.snake-btn {
+  padding: 0.5rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #1db954;
+  color: white;
+  box-shadow: 0px 3px 0px #16833d;
+  transition: transform 0.06s, box-shadow 0.06s;
+}
+
+.snake-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0px 1px 0px #16833d;
+}

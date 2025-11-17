@@ -20,7 +20,10 @@ export type GameId =
   | "connect4"
   | "rpsls"
   | "minesweeper"
-  | "madlibs";
+  | "madlibs"
+  | "snake"
+  | "flappybird"
+  | "idleclicker";
 
 export type GlobalStats = {
   totalGamesPlayed: number;
@@ -197,6 +200,9 @@ function createInitialPerGameStats(): Record<GameId, PerGameStats> {
     "rpsls",
     "minesweeper",
     "madlibs",
+    "snake",
+    "flappybird",
+    "idleclicker",
   ];
 
   const result: Partial<Record<GameId, PerGameStats>> = {};
@@ -220,6 +226,9 @@ const defaultEquippedSkins: EquippedSkins = {
   rpsls: null,
   minesweeper: null,
   madlibs: null,
+  snake: null,
+  flappybird: null,
+  idleclicker: null,
   global: null,
 };
 

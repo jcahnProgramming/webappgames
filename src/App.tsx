@@ -20,6 +20,11 @@ import { RpslsGame } from "./games/RpslsGame";
 import { MinesweeperGame } from "./games/MinesweeperGame";
 import { MadLibsGame } from "./games/MadLibsGame";
 
+import { SnakeGame } from "./games/SnakeGame";
+import { FlappyBirdGame } from "./games/FlappyBirdGame";
+import { IdleClickerGame } from "./games/IdleClickerGame";
+
+
 type ViewId = "arcade" | "profile" | "about";
 
 type GameMeta = {
@@ -105,6 +110,27 @@ const GAME_LIST: GameMeta[] = [
     tagline: "Fill in the blanks to forge ridiculous little stories.",
     badge: "Chill",
   },
+    {
+    id: "snake",
+    shortName: "Snake",
+    name: "Snake Classic",
+    tagline: "Grow your snake and avoid running into yourself.",
+    badge: "Arcade",
+  },
+  {
+    id: "flappybird",
+    shortName: "Flappy",
+    name: "Flappy Bird Clone",
+    tagline: "Tap to flap through endless pipes without crashing.",
+    badge: "Hard",
+  },
+  {
+    id: "idleclicker",
+    shortName: "Idle",
+    name: "Idle Clicker",
+    tagline: "Click for coins and buy upgrades that farm for you.",
+    badge: "Chill",
+  },
 ];
 
 const GAME_CONTROLS: Record<GameId, string[]> = {
@@ -162,6 +188,21 @@ const GAME_CONTROLS: Record<GameId, string[]> = {
     "Fill in each blank with whatever words you like.",
     "Click 'Generate Story' to see your chaotic creation.",
   ],
+    snake: [
+    "Use the arrow keys or WASD to move.",
+    "Eat the food to grow longer.",
+    "Don’t run into yourself!",
+  ],
+  flappybird: [
+    "Press Space or ↑ (or tap the button) to flap.",
+    "Fly through the gaps between the pipes.",
+    "Touching a pipe or the ground ends the run.",
+  ],
+  idleclicker: [
+    "Click the big button to earn coins.",
+    "Buy upgrades to generate coins automatically.",
+    "Stack upgrades and watch your income grow over time.",
+  ],
 };
 
 const App: React.FC = () => {
@@ -199,6 +240,12 @@ const App: React.FC = () => {
         return <MinesweeperGame />;
       case "madlibs":
         return <MadLibsGame />;
+            case "snake":
+        return <SnakeGame />;
+      case "flappybird":
+        return <FlappyBirdGame />;
+      case "idleclicker":
+        return <IdleClickerGame />;
       default:
         return null;
     }
