@@ -1,73 +1,188 @@
-# React + TypeScript + Vite
+# 🎮 Mobile Webapp Arcade
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A lightweight, fast-loading, mobile-optimized **web arcade** featuring multiple mini-games built with **React**, **TypeScript**, and a unified **ArcadeContext** game-loader system.  
+Each game is isolated, plug-and-play, and mounted inside a shared `<GameShell />` UI.
 
-Currently, two official plugins are available:
+This project is designed to be **expandable**, **themeable**, and extremely easy to maintain as new games are added.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🎲 Included Games
+- **Wordle Clone**
+- **Word Search**
+- **Sudoku**
+- **Tic-Tac-Toe**
+- **2048**
+- **Memory Match**
+- **Sliding Puzzle**
+- **Trivia Game**
+- **Connect Four**
+- **Rock–Paper–Scissors–Lizard–Spock**
+- **Minesweeper**
+- **MadLibs (New!)**
 
-## Expanding the ESLint configuration
+Every game uses the shared loader provided by `ArcadeContext`.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🧠 Core Architecture
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **React + TypeScript**
+- **Global state** managed through `ArcadeContext`
+- `<GameShell />` handles:
+  - Layout + shell UI  
+  - Game switching  
+  - Achievements  
+  - Stats & score tracking  
+- **ProfileDashboard** stores player progress, achievements, and history
+- **Achievement Toast System** for instant reward feedback
+- **Dynamic game loading** based on `GameId`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📁 Project Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+src/
+├── components/
+│ ├── GameShell.tsx
+│ ├── ProfileDashboard.tsx
+│ ├── AchievementToastContainer.tsx
+│ └── (shared UI components)
+│
+├── games/
+│ ├── WordleGame/
+│ ├── WordSearchGame/
+│ ├── SudokuGame/
+│ ├── TicTacToeGame/
+│ ├── Game2048/
+│ ├── MemoryMatchGame/
+│ ├── SlidingPuzzleGame/
+│ ├── TriviaGame/
+│ ├── ConnectFourGame/
+│ ├── RpslsGame/
+│ ├── MinesweeperGame/
+│ └── MadLibsGame/ ← NEW
+│
+├── context/
+│ └── ArcadeContext.tsx
+│
+├── App.tsx
+├── App.css
+└── index.tsx
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+
+---
+
+## 🧩 Adding a New Game
+
+Follow these steps to add a new game:
+
+### 1. Create the game folder
+src/games/MyNewGame/
+
+
+### 2. Export a React component for the game
+export function MyNewGame() {
+  return <div>My new game!</div>;
+}
+
+### 3. Register the game in ArcadeContext
+
+Add a new GameId and map it to the component.
+
+### 4. Add the game button (if required) to <GameShell />
+
+The loader will automatically render whichever component matches the selected GameId.
+
+## 🛠 Development
+
+Install dependencies
+
+```npm install```
+
+Run the dev server
+
+```npm run dev```
+
+Build for production
+
+```npm run build```
+
+## 📱 Mobile-First Design Principles
+The arcade is optimized for:
+
+Touch screens
+
+Mobile browsers
+
+PWAs
+
+Low-load, fast-startup sessions
+
+Design choices include:
+
+Lightweight components
+
+Lazy-loaded games
+
+Minimal dependencies
+
+Responsive grid layout
+
+## 🏆 Achievement System
+
+Games can push achievement events into the shared context, enabling:
+
+Score tracking
+
+Level progression
+
+Achievement toasts
+
+Profile stat updates
+
+Everything is centralized for consistency across all games.
+
+## 🧭 Roadmap
+
+Short-Term Goals
+
+Add more games (Hangman, Blackjack, Slots, Escape Room)
+
+Add global leaderboard
+
+Add sound effects with user toggles
+
+Improve accessibility (keyboard-only mode, contrast themes)
+
+Long-Term Goals
+
+Cloud-saved profiles
+
+Multiplayer support (turn-based or realtime)
+
+PWA offline mode
+
+UI themes / skins / seasonal events
+
+## 🤝 Contributing
+Guidelines:
+
+Each game must be fully self-contained
+
+No external global state inside individual games
+
+All state should flow through ArcadeContext
+
+Keep components lightweight and mobile-friendly
+
+PRs & improvements welcome.
+
+
+## 📜 License
+
+This project is proprietary and part of the Mobile Webapp Games system.
+All rights reserved unless otherwise noted.
+
