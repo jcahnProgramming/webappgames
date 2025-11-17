@@ -43,7 +43,7 @@ Every game uses the shared loader provided by `ArcadeContext`.
 ---
 
 ## 📁 Project Structure
-
+```
 src/
 ├── components/
 │ ├── GameShell.tsx
@@ -71,7 +71,7 @@ src/
 ├── App.tsx
 ├── App.css
 └── index.tsx
-
+```
 
 ---
 
